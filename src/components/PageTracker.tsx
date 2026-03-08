@@ -23,10 +23,10 @@ const PageTracker = () => {
     lastPath.current = path;
 
     const visitorId = getVisitorId();
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    if (!supabaseUrl) return;
+    const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+    if (!projectId) return;
 
-    const url = `${supabaseUrl}/functions/v1/track-pageview`;
+    const url = `https://${projectId}.jiobase.com/functions/v1/track-pageview`;
 
     // Use sendBeacon for reliability, fall back to fetch
     const body = JSON.stringify({
