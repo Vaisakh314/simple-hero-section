@@ -233,12 +233,17 @@ const AdminContent = () => {
                         </div>
                       )}
                     </div>
+                  ) : field.type === "resume-editor" ? (
+                    <ResumeEditor
+                      value={values[field.key]}
+                      onChange={(json) => updateField(field.key, json)}
+                    />
                   ) : field.type === "textarea" ? (
                     <Textarea
                       value={values[field.key] ?? ""}
                       onChange={(e) => updateField(field.key, e.target.value)}
-                      rows={field.key.includes("JSON") || field.key === "navLinks" || field.key === "resumeData" || field.key === "identityHighlights" ? 6 : 3}
-                      className={field.key.includes("JSON") || field.key === "navLinks" || field.key === "resumeData" || field.key === "identityHighlights" ? "font-mono text-xs" : ""}
+                      rows={field.key.includes("JSON") || field.key === "navLinks" || field.key === "identityHighlights" ? 6 : 3}
+                      className={field.key.includes("JSON") || field.key === "navLinks" || field.key === "identityHighlights" ? "font-mono text-xs" : ""}
                     />
                   ) : (
                     <Input
