@@ -21,6 +21,7 @@ const Footer = () => {
   const brandRole = content?.footerBrandRole ?? content?.navBrandRole ?? "Designer";
   const email = content?.email ?? "";
   const linkedin = content?.linkedin ?? "";
+  const github = content?.github ?? "";
   const behance = content?.behance ?? "";
   const dribbble = content?.dribbble ?? "";
   const copyright = content?.footerCopyright ?? "";
@@ -28,6 +29,7 @@ const Footer = () => {
   const socialLinks = [
     { url: email ? `mailto:${email}` : "", label: "Email", icon: <Mail className="h-5 w-5" />, isExternal: false },
     { url: linkedin, label: "LinkedIn", icon: <Linkedin className="h-5 w-5" />, isExternal: true },
+    { url: github, label: "GitHub", icon: <Github className="h-5 w-5" />, isExternal: true },
     { url: behance, label: "Behance", icon: <BehanceIcon className="h-5 w-5" />, isExternal: true },
     { url: dribbble, label: "Dribbble", icon: <DribbbleIcon className="h-5 w-5" />, isExternal: true },
   ].filter((l) => l.url);
