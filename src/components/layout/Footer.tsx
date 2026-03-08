@@ -20,7 +20,7 @@ const MediumIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-
+const Footer = () => {
   const { data: content } = useSiteContent();
 
   const brandName = content?.footerBrandName ?? content?.navBrandName ?? "Portfolio";
