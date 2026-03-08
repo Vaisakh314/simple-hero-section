@@ -12,6 +12,7 @@ const ALLOWED_TAGS = [
   "strong", "em", "u", "s", "a", "img",
   "figure", "figcaption", "div", "span",
   "video", "source",
+  "table", "thead", "tbody", "tfoot", "tr", "th", "td", "colgroup", "col",
 ];
 
 const ALLOWED_ATTR = [
