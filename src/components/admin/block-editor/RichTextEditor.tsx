@@ -307,8 +307,59 @@ export default function RichTextEditor({ content, onChange, placeholder, classNa
     { icon: Minus, label: "Divider", onClick: () => { editor.chain().focus().setHorizontalRule().run(); setPlusMenuOpen(false); } },
   ];
 
+  // Close table context menu on click anywhere or scroll
+  useEffect(() => {
+    if (!tableCtx) return;
+    const close = () => setTableCtx(null);
+    window.addEventListener("click", close);
+    window.addEventListener("scroll", close, true);
+    return () => {
+      window.removeEventListener("click", close);
+      window.removeEventListener("scroll", close, true);
+    };
+  }, [tableCtx]);
+
+  // Right-click handler for table cells
+  const handleContextMenu = useCallback(
+    (e: React.MouseEvent) => {
+      if (!editor) return;
+      const target = e.target as HTMLElement;
+      const cell = target.closest("td, th");
+      if (!cell) {
+        setTableCtx(null);
+        return; // let browser default happen outside tables
+      }
+      e.preventDefault();
+      const containerRect = editorContainerRef.current?.getBoundingClientRect();
+      if (!containerRect) return;
+      setTableCtx({
+        x: e.clientX - containerRect.left,
+        y: e.clientY - containerRect.top,
+      });
+    },
+    [editor],
+  );
+
+  const tableCtxActions = editor
+    ? [
+        { label: "Insert row above", action: () => editor.chain().focus().addRowBefore().run() },
+        { label: "Insert row below", action: () => editor.chain().focus().addRowAfter().run() },
+        { label: "Delete row", action: () => editor.chain().focus().deleteRow().run(), destructive: true },
+        { type: "sep" as const },
+        { label: "Insert column left", action: () => editor.chain().focus().addColumnBefore().run() },
+        { label: "Insert column right", action: () => editor.chain().focus().addColumnAfter().run() },
+        { label: "Delete column", action: () => editor.chain().focus().deleteColumn().run(), destructive: true },
+        { type: "sep" as const },
+        { label: "Delete table", action: () => editor.chain().focus().deleteTable().run(), destructive: true },
+      ]
+    : [];
+
   return (
-    <div ref={editorContainerRef} className={cn("relative rounded-md border border-input bg-background", className)}>
+    <div
+      ref={editorContainerRef}
+      className={cn("relative rounded-md border border-input bg-background", className)}
+      onContextMenu={handleContextMenu}
+    >
       {/* Selection-based formatting toolbar */}
       <BubbleMenu
         editor={editor}
@@ -327,6 +378,37 @@ export default function RichTextEditor({ content, onChange, placeholder, classNa
       >
         {toolbarButtons}
       </BubbleMenu>
+
+      {/* Table right-click context menu */}
+      {tableCtx && (
+        <div
+          className="absolute z-[10000] min-w-[180px] rounded-md border border-border bg-popover p-1 shadow-lg animate-in fade-in-0 zoom-in-95"
+          style={{ top: tableCtx.y, left: tableCtx.x }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {tableCtxActions.map((item, i) =>
+            "type" in item && item.type === "sep" ? (
+              <div key={i} className="my-1 h-px bg-border" />
+            ) : (
+              <button
+                key={i}
+                type="button"
+                className={cn(
+                  "flex w-full items-center rounded-sm px-2 py-1.5 text-sm transition-colors",
+                  "hover:bg-accent hover:text-accent-foreground",
+                  "destructive" in item && item.destructive && "text-destructive hover:text-destructive",
+                )}
+                onClick={() => {
+                  if ("action" in item) item.action();
+                  setTableCtx(null);
+                }}
+              >
+                {"label" in item ? item.label : ""}
+              </button>
+            ),
+          )}
+        </div>
+      )}
 
       {/* "+" insert button on empty lines */}
       {plusMenuPos && (
