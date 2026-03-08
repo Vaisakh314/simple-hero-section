@@ -285,13 +285,13 @@ export default function RichTextEditor({ content, onChange, placeholder, classNa
           {sep}
           <Toggle size="sm" pressed={false} onPressedChange={() => editor.chain().focus().addRowBefore().run()} className={btn(false)} title="Insert row above"><ArrowUpFromLine className="h-3.5 w-3.5" /></Toggle>
           <Toggle size="sm" pressed={false} onPressedChange={() => editor.chain().focus().addRowAfter().run()} className={btn(false)} title="Insert row below"><ArrowDownFromLine className="h-3.5 w-3.5" /></Toggle>
-          <Toggle size="sm" pressed={false} onPressedChange={() => editor.chain().focus().deleteRow().run()} className={btn(false)} title="Delete row"><Rows3 className="h-3.5 w-3.5 text-red-400" /></Toggle>
+          <Toggle size="sm" pressed={false} onPressedChange={() => editor.chain().focus().deleteRow().run()} className={btn(false)} title="Delete row"><Rows3 className="h-3.5 w-3.5 text-destructive" /></Toggle>
           {sep}
           <Toggle size="sm" pressed={false} onPressedChange={() => editor.chain().focus().addColumnBefore().run()} className={btn(false)} title="Insert column left"><ArrowLeftFromLine className="h-3.5 w-3.5" /></Toggle>
           <Toggle size="sm" pressed={false} onPressedChange={() => editor.chain().focus().addColumnAfter().run()} className={btn(false)} title="Insert column right"><ArrowRightFromLine className="h-3.5 w-3.5" /></Toggle>
-          <Toggle size="sm" pressed={false} onPressedChange={() => editor.chain().focus().deleteColumn().run()} className={btn(false)} title="Delete column"><Columns3 className="h-3.5 w-3.5 text-red-400" /></Toggle>
+          <Toggle size="sm" pressed={false} onPressedChange={() => editor.chain().focus().deleteColumn().run()} className={btn(false)} title="Delete column"><Columns3 className="h-3.5 w-3.5 text-destructive" /></Toggle>
           {sep}
-          <Toggle size="sm" pressed={false} onPressedChange={() => editor.chain().focus().deleteTable().run()} className={btn(false)} title="Delete table"><Trash2 className="h-3.5 w-3.5 text-red-400" /></Toggle>
+          <Toggle size="sm" pressed={false} onPressedChange={() => editor.chain().focus().deleteTable().run()} className={btn(false)} title="Delete table"><Trash2 className="h-3.5 w-3.5 text-destructive" /></Toggle>
         </>
       )}
     </>
