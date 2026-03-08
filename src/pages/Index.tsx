@@ -35,6 +35,8 @@ const Index = () => {
   const cta3Text = content?.heroCTA3Text ?? "Read Blog";
   const cta3Link = content?.heroCTA3Link ?? "/blog";
 
+  const linkedinUrl = content?.linkedin ?? "https://linkedin.com";
+
   const ctaTitle = content?.ctaTitle ?? "Let's build something meaningful.";
   const ctaSubtitle = content?.ctaSubtitle ?? "Open to product roles, advisory, and conversations about craft.";
   const ctaButtonText = content?.ctaButtonText ?? "Get in Touch";
