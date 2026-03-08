@@ -8,12 +8,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Save, Upload } from "lucide-react";
+import ResumeEditor from "@/components/admin/ResumeEditor";
 
 interface ContentField {
   key: string;
   label: string;
   help?: string;
-  type: "text" | "textarea" | "url" | "file-pdf";
+  type: "text" | "textarea" | "url" | "file-pdf" | "resume-editor";
 }
 
 const sections: { title: string; fields: ContentField[] }[] = [
@@ -97,7 +98,7 @@ const sections: { title: string; fields: ContentField[] }[] = [
       { key: "resumeDescription", label: "Resume Description", help: "Subtitle on Resume page", type: "text" },
       { key: "resumeDownloadLabel", label: "Download Button Label", help: "Default: 'Download PDF'", type: "text" },
       { key: "resumeUrl", label: "Resume PDF", help: "Upload a PDF or paste a URL. The PDF will be shown as preview and downloadable.", type: "file-pdf" },
-      { key: "resumeData", label: "Resume Data (JSON)", help: 'Paste JSON with keys: experience (array of {title, company, period, highlights[]}), education (array of {degree, school, year}), skills (string[]), tools (string[]). Example: {"experience":[{"title":"PM","company":"Acme","period":"2020–Now","highlights":["Led launch"]}],"education":[{"degree":"B.Tech","school":"MIT","year":"2020"}],"skills":["Roadmapping"],"tools":["Jira"]}', type: "textarea" },
+      { key: "resumeData", label: "Resume Details", help: "Add your work experience, education, skills, and tools below.", type: "resume-editor" },
     ],
   },
 ];
@@ -232,12 +233,17 @@ const AdminContent = () => {
                         </div>
                       )}
                     </div>
+                  ) : field.type === "resume-editor" ? (
+                    <ResumeEditor
+                      value={values[field.key]}
+                      onChange={(json) => updateField(field.key, json)}
+                    />
                   ) : field.type === "textarea" ? (
                     <Textarea
                       value={values[field.key] ?? ""}
                       onChange={(e) => updateField(field.key, e.target.value)}
-                      rows={field.key.includes("JSON") || field.key === "navLinks" || field.key === "resumeData" || field.key === "identityHighlights" ? 6 : 3}
-                      className={field.key.includes("JSON") || field.key === "navLinks" || field.key === "resumeData" || field.key === "identityHighlights" ? "font-mono text-xs" : ""}
+                      rows={field.key.includes("JSON") || field.key === "navLinks" || field.key === "identityHighlights" ? 6 : 3}
+                      className={field.key.includes("JSON") || field.key === "navLinks" || field.key === "identityHighlights" ? "font-mono text-xs" : ""}
                     />
                   ) : (
                     <Input
