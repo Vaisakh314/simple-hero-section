@@ -102,14 +102,12 @@ const Index = () => {
               </motion.div>
               <motion.div initial="hidden" animate="visible" custom={4} variants={fadeUp}
                 className="mt-4 flex items-center">
-                {content?.linkedin && (
-                  <a href={content.linkedin} target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary group">
-                    <Linkedin className="h-4 w-4" />
-                    <span>Connect on LinkedIn</span>
-                    <ArrowRight className="h-3 w-3 opacity-0 -translate-x-1 transition-all group-hover:opacity-100 group-hover:translate-x-0" />
-                  </a>
-                )}
+                <a href="https://linkedin.com/in/vaisakhviswanath" target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary group">
+                  <Linkedin className="h-4 w-4" />
+                  <span>Connect on LinkedIn</span>
+                  <ArrowRight className="h-3 w-3 opacity-0 -translate-x-1 transition-all group-hover:opacity-100 group-hover:translate-x-0" />
+                </a>
               </motion.div>
             </div>
 
