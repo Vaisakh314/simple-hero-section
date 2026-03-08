@@ -24,6 +24,7 @@ const Footer = () => {
   const github = content?.github ?? "";
   const behance = content?.behance ?? "";
   const dribbble = content?.dribbble ?? "";
+  const medium = content?.medium ?? "";
   const copyright = content?.footerCopyright ?? "";
 
   const socialLinks = [
@@ -32,6 +33,7 @@ const Footer = () => {
     { url: github, label: "GitHub", icon: <Github className="h-5 w-5" />, isExternal: true },
     { url: behance, label: "Behance", icon: <BehanceIcon className="h-5 w-5" />, isExternal: true },
     { url: dribbble, label: "Dribbble", icon: <DribbbleIcon className="h-5 w-5" />, isExternal: true },
+    { url: medium, label: "Medium", icon: <MediumIcon className="h-5 w-5" />, isExternal: true },
   ].filter((l) => l.url);
 
   return (

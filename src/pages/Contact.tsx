@@ -23,6 +23,7 @@ const Contact = () => {
   const github = content?.github ?? "";
   const behance = content?.behance ?? "";
   const dribbble = content?.dribbble ?? "";
+  const medium = content?.medium ?? "";
   const contactNote = content?.contactNote ?? "";
 
   const links = [
@@ -31,6 +32,7 @@ const Contact = () => {
     { url: github, label: "GitHub", icon: <Github className="h-5 w-5 text-primary" />, display: github },
     { url: behance, label: "Behance Portfolio", icon: <BehanceIcon className="h-5 w-5 text-primary" />, display: behance },
     { url: dribbble, label: "Dribbble Profile", icon: <DribbbleIcon className="h-5 w-5 text-primary" />, display: dribbble },
+    { url: medium, label: "Medium Blog", icon: <MediumIcon className="h-5 w-5 text-primary" />, display: medium },
   ].filter((l) => l.display);
 
   return (
