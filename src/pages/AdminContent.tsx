@@ -355,8 +355,8 @@ const AdminContent = () => {
             <div className="flex items-center gap-2">
               <div className="flex gap-1.5">
                 <div className="h-3 w-3 rounded-full bg-destructive/40" />
-                <div className="h-3 w-3 rounded-full bg-yellow-400/60" />
-                <div className="h-3 w-3 rounded-full bg-green-400/60" />
+                <div className="h-3 w-3 rounded-full bg-accent/60" />
+                <div className="h-3 w-3 rounded-full bg-primary/40" />
               </div>
               <span className="ml-2 rounded bg-muted px-3 py-1 font-mono text-xs text-muted-foreground">
                 {previewRoute}
