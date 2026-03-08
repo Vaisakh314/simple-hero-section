@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Linkedin, Mail } from "lucide-react";
+import { Linkedin, Github, Mail } from "lucide-react";
 import { useSiteContent } from "@/hooks/use-content";
 
 const BehanceIcon = ({ className }: { className?: string }) => (

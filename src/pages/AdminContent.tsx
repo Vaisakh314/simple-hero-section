@@ -46,6 +46,7 @@ const sections: { id: string; title: string; description: string; fields: Conten
       { key: "heroSubtitle", label: "Your Role", placeholder: "e.g. Mechanical Engineer", type: "text" },
       { key: "email", label: "Email", placeholder: "e.g. hello@example.com", type: "text" },
       { key: "linkedin", label: "LinkedIn URL", placeholder: "https://linkedin.com/in/yourhandle", type: "url" },
+      { key: "github", label: "GitHub URL", placeholder: "https://github.com/yourhandle", help: "Leave empty to hide.", type: "url" },
       { key: "behance", label: "Behance URL", placeholder: "https://behance.net/yourhandle", help: "Leave empty to hide.", type: "url" },
       { key: "dribbble", label: "Dribbble URL", placeholder: "https://dribbble.com/yourhandle", help: "Leave empty to hide.", type: "url" },
       { key: "heroPhotoUrl", label: "Profile Photo URL", help: "Used in hero section. Leave empty to use default.", type: "url" },
