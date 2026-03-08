@@ -49,6 +49,7 @@ const sections: { id: string; title: string; description: string; fields: Conten
       { key: "github", label: "GitHub URL", placeholder: "https://github.com/yourhandle", help: "Leave empty to hide.", type: "url" },
       { key: "behance", label: "Behance URL", placeholder: "https://behance.net/yourhandle", help: "Leave empty to hide.", type: "url" },
       { key: "dribbble", label: "Dribbble URL", placeholder: "https://dribbble.com/yourhandle", help: "Leave empty to hide.", type: "url" },
+      { key: "medium", label: "Medium URL", placeholder: "https://medium.com/@yourhandle", help: "Leave empty to hide.", type: "url" },
       { key: "heroPhotoUrl", label: "Profile Photo URL", help: "Used in hero section. Leave empty to use default.", type: "url" },
     ],
   },
