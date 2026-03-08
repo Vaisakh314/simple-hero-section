@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, FileText, BookOpen, TrendingUp, Target } from "lucide-react";
+import { ArrowRight, FileText, BookOpen, TrendingUp, Target, Linkedin } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import SectionHeading from "@/components/SectionHeading";
@@ -99,6 +99,17 @@ const Index = () => {
                     {cta3Text}
                   </Link>
                 </Button>
+              </motion.div>
+              <motion.div initial="hidden" animate="visible" custom={4} variants={fadeUp}
+                className="mt-4 flex items-center">
+                {content?.linkedinUrl && (
+                  <a href={content.linkedinUrl} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary group">
+                    <Linkedin className="h-4 w-4" />
+                    <span>Connect on LinkedIn</span>
+                    <ArrowRight className="h-3 w-3 opacity-0 -translate-x-1 transition-all group-hover:opacity-100 group-hover:translate-x-0" />
+                  </a>
+                )}
               </motion.div>
             </div>
 
