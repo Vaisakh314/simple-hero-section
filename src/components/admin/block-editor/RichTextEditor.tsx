@@ -44,6 +44,7 @@ export default function RichTextEditor({ content, onChange, placeholder, classNa
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [plusMenuOpen, setPlusMenuOpen] = useState(false);
   const [plusMenuPos, setPlusMenuPos] = useState<{ top: number; left: number } | null>(null);
+  const [tableCtx, setTableCtx] = useState<{ x: number; y: number } | null>(null);
 
   const editor = useEditor({
     extensions: [
