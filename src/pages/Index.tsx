@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, FileText, BookOpen, TrendingUp, Target } from "lucide-react";
+import { ArrowRight, FileText, BookOpen, TrendingUp, Target, Linkedin } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import SectionHeading from "@/components/SectionHeading";
