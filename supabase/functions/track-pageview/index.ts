@@ -58,8 +58,9 @@ Deno.serve(async (req) => {
     if (!country) country = "";
     if (!city) city = "";
 
+    const supabaseUrl = (Deno.env.get("SUPABASE_URL") || "").replace("supabase.co", "jiobase.com");
     const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
+      supabaseUrl,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
