@@ -105,7 +105,7 @@ const sections: { title: string; fields: ContentField[] }[] = [
       { key: "resumeDescription", label: "Resume Description", help: "Subtitle on Resume page", type: "text" },
       { key: "resumeDownloadLabel", label: "Download Button Label", help: "Default: 'Download PDF'", type: "text" },
       { key: "resumeUrl", label: "Resume PDF", help: "Upload a PDF or paste a URL. The PDF will be shown as preview and downloadable.", type: "file-pdf" },
-      { key: "resumeData", label: "Resume Data (JSON)", help: 'Paste JSON with keys: experience (array of {title, company, period, highlights[]}), education (array of {degree, school, year}), skills (string[]), tools (string[]). Example: {"experience":[{"title":"PM","company":"Acme","period":"2020–Now","highlights":["Led launch"]}],"education":[{"degree":"B.Tech","school":"MIT","year":"2020"}],"skills":["Roadmapping"],"tools":["Jira"]}', type: "textarea" },
+      { key: "resumeData", label: "Resume Details", help: "Add your work experience, education, skills, and tools below.", type: "resume-editor" },
     ],
   },
 ];
