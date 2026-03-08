@@ -109,6 +109,39 @@ export default function RichTextEditor({ content, onChange, placeholder, classNa
     };
   }, [editor, updatePlusButton]);
 
+  // Close table context menu on click anywhere or scroll
+  useEffect(() => {
+    if (!tableCtx) return;
+    const close = () => setTableCtx(null);
+    window.addEventListener("click", close);
+    window.addEventListener("scroll", close, true);
+    return () => {
+      window.removeEventListener("click", close);
+      window.removeEventListener("scroll", close, true);
+    };
+  }, [tableCtx]);
+
+  // Right-click handler for table cells
+  const handleContextMenu = useCallback(
+    (e: React.MouseEvent) => {
+      if (!editor) return;
+      const target = e.target as HTMLElement;
+      const cell = target.closest("td, th");
+      if (!cell) {
+        setTableCtx(null);
+        return;
+      }
+      e.preventDefault();
+      const containerRect = editorContainerRef.current?.getBoundingClientRect();
+      if (!containerRect) return;
+      setTableCtx({
+        x: e.clientX - containerRect.left,
+        y: e.clientY - containerRect.top,
+      });
+    },
+    [editor],
+  );
+
   if (!editor) return null;
 
   const btn = (active: boolean) =>
