@@ -1,4 +1,4 @@
-import { Mail, Linkedin, ArrowUpRight } from "lucide-react";
+import { Mail, Linkedin, Github, ArrowUpRight } from "lucide-react";
 import SectionHeading from "@/components/SectionHeading";
 import { useSiteContent } from "@/hooks/use-content";
 
