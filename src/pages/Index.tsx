@@ -35,6 +35,8 @@ const Index = () => {
   const cta3Text = content?.heroCTA3Text ?? "Read Blog";
   const cta3Link = content?.heroCTA3Link ?? "/blog";
 
+  const linkedinUrl = content?.linkedin ?? "https://linkedin.com";
+
   const ctaTitle = content?.ctaTitle ?? "Let's build something meaningful.";
   const ctaSubtitle = content?.ctaSubtitle ?? "Open to product roles, advisory, and conversations about craft.";
   const ctaButtonText = content?.ctaButtonText ?? "Get in Touch";
@@ -102,7 +104,7 @@ const Index = () => {
               </motion.div>
               <motion.div initial="hidden" animate="visible" custom={4} variants={fadeUp}
                 className="mt-4 flex items-center">
-                <a href="https://linkedin.com/in/vaisakhviswanath" target="_blank" rel="noopener noreferrer"
+                <a href={linkedinUrl} target="_blank" rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary group">
                   <Linkedin className="h-4 w-4" />
                   <span>Connect on LinkedIn</span>
