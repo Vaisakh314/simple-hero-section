@@ -296,7 +296,6 @@ export default function RichTextEditor({ content, onChange, placeholder, classNa
         editor={editor}
         options={{
           placement: isMobile ? "bottom" : "top",
-          offset: 8,
           strategy: "fixed",
         }}
         className={cn(
