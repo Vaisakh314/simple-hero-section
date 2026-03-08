@@ -285,6 +285,7 @@ export default function RichTextEditor({ content, onChange, placeholder, classNa
     { icon: GifIcon, label: "GIF", onClick: () => gifRef.current?.click() },
     { icon: Film, label: "Video", onClick: () => videoRef.current?.click() },
     { icon: FileText, label: "PPT / PDF", onClick: () => fileRef.current?.click() },
+    { icon: TableIcon, label: "Table", onClick: () => { editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(); setPlusMenuOpen(false); } },
     { icon: Minus, label: "Divider", onClick: () => { editor.chain().focus().setHorizontalRule().run(); setPlusMenuOpen(false); } },
   ];
 

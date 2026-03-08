@@ -18,6 +18,7 @@ const ALLOWED_TAGS = [
 const ALLOWED_ATTR = [
   "href", "target", "rel", "src", "alt", "title", "class", "style", "width", "height",
   "controls", "preload", "type", "data-file-embed",
+  "colspan", "rowspan", "scope",
 ];
 
 function sanitize(html: string): string {
