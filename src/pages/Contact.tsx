@@ -1,4 +1,4 @@
-import { Mail, Linkedin, ArrowUpRight } from "lucide-react";
+import { Mail, Linkedin, Github, ArrowUpRight } from "lucide-react";
 import SectionHeading from "@/components/SectionHeading";
 import { useSiteContent } from "@/hooks/use-content";
 
@@ -20,13 +20,15 @@ const Contact = () => {
   const title = content?.contactTitle ?? "Get in Touch";
   const email = content?.email ?? "";
   const linkedin = content?.linkedin ?? "";
+  const github = content?.github ?? "";
   const behance = content?.behance ?? "";
   const dribbble = content?.dribbble ?? "";
   const contactNote = content?.contactNote ?? "";
 
   const links = [
     { url: email ? `mailto:${email}` : "", label: email, icon: <Mail className="h-5 w-5 text-primary" />, display: email },
-    { url: linkedin, label: "LinkedIn Profile", icon: <Linkedin className="h-5 w-5 text-primary" /> , display: linkedin },
+    { url: linkedin, label: "LinkedIn Profile", icon: <Linkedin className="h-5 w-5 text-primary" />, display: linkedin },
+    { url: github, label: "GitHub", icon: <Github className="h-5 w-5 text-primary" />, display: github },
     { url: behance, label: "Behance Portfolio", icon: <BehanceIcon className="h-5 w-5 text-primary" />, display: behance },
     { url: dribbble, label: "Dribbble Profile", icon: <DribbbleIcon className="h-5 w-5 text-primary" />, display: dribbble },
   ].filter((l) => l.display);
