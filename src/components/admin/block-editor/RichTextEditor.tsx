@@ -13,7 +13,8 @@ import {
   Bold, Italic, Underline as UnderlineIcon, Strikethrough,
   Link as LinkIcon, List, ListOrdered, Quote, Minus, ImagePlus, Code,
   Heading1, Heading2, Heading3, Plus, Film, FileText, Image as GifIcon,
-  TableIcon,
+  TableIcon, Rows3, Columns3, Trash2, ArrowUpFromLine, ArrowDownFromLine,
+  ArrowLeftFromLine, ArrowRightFromLine,
 } from "lucide-react";
 import { Toggle } from "@/components/ui/toggle";
 import { cn } from "@/lib/utils";
@@ -277,6 +278,22 @@ export default function RichTextEditor({ content, onChange, placeholder, classNa
       {sep}
 
       <Toggle size="sm" pressed={editor.isActive("table")} onPressedChange={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()} className={btn(editor.isActive("table"))}><TableIcon className="h-3.5 w-3.5" /></Toggle>
+
+      {/* Table row/column controls — only visible when inside a table */}
+      {editor.isActive("table") && (
+        <>
+          {sep}
+          <Toggle size="sm" pressed={false} onPressedChange={() => editor.chain().focus().addRowBefore().run()} className={btn(false)} title="Insert row above"><ArrowUpFromLine className="h-3.5 w-3.5" /></Toggle>
+          <Toggle size="sm" pressed={false} onPressedChange={() => editor.chain().focus().addRowAfter().run()} className={btn(false)} title="Insert row below"><ArrowDownFromLine className="h-3.5 w-3.5" /></Toggle>
+          <Toggle size="sm" pressed={false} onPressedChange={() => editor.chain().focus().deleteRow().run()} className={btn(false)} title="Delete row"><Rows3 className="h-3.5 w-3.5 text-destructive" /></Toggle>
+          {sep}
+          <Toggle size="sm" pressed={false} onPressedChange={() => editor.chain().focus().addColumnBefore().run()} className={btn(false)} title="Insert column left"><ArrowLeftFromLine className="h-3.5 w-3.5" /></Toggle>
+          <Toggle size="sm" pressed={false} onPressedChange={() => editor.chain().focus().addColumnAfter().run()} className={btn(false)} title="Insert column right"><ArrowRightFromLine className="h-3.5 w-3.5" /></Toggle>
+          <Toggle size="sm" pressed={false} onPressedChange={() => editor.chain().focus().deleteColumn().run()} className={btn(false)} title="Delete column"><Columns3 className="h-3.5 w-3.5 text-destructive" /></Toggle>
+          {sep}
+          <Toggle size="sm" pressed={false} onPressedChange={() => editor.chain().focus().deleteTable().run()} className={btn(false)} title="Delete table"><Trash2 className="h-3.5 w-3.5 text-destructive" /></Toggle>
+        </>
+      )}
     </>
   );
 
