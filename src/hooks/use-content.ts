@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 import { siteContent as mockSiteContent, caseStudies as mockCaseStudies, blogPosts as mockBlogPosts } from "@/lib/mock-data";
 import type { CaseStudy, BlogPost } from "@/lib/types";
 
