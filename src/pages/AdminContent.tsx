@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Save, Upload, ChevronDown } from "lucide-react";
+import { ArrowLeft, Save, Upload, Eye, EyeOff, RefreshCw } from "lucide-react";
 import ResumeEditor from "@/components/admin/ResumeEditor";
 import {
   Accordion,
@@ -23,6 +23,18 @@ interface ContentField {
   type: "text" | "textarea" | "url" | "file-pdf" | "resume-editor";
   placeholder?: string;
 }
+
+/** Map section id → the public route to preview */
+const sectionPreviewRoute: Record<string, string> = {
+  profile: "/",
+  homepage: "/",
+  cta: "/",
+  about: "/about",
+  resume: "/resume",
+  contact: "/contact",
+  branding: "/",
+  headings: "/work",
+};
 
 const sections: { id: string; title: string; description: string; fields: ContentField[] }[] = [
   {
@@ -129,6 +141,9 @@ const sections: { id: string; title: string; description: string; fields: Conten
 const AdminContent = () => {
   const [values, setValues] = useState<Record<string, string>>({});
   const [uploading, setUploading] = useState(false);
+  const [showPreview, setShowPreview] = useState(true);
+  const [previewRoute, setPreviewRoute] = useState("/");
+  const [previewKey, setPreviewKey] = useState(0);
   const { toast } = useToast();
   const qc = useQueryClient();
   const fileRef = useRef<HTMLInputElement>(null);
@@ -162,6 +177,8 @@ const AdminContent = () => {
       toast({ title: "All content saved!" });
       qc.invalidateQueries({ queryKey: ["admin-site-content"] });
       qc.invalidateQueries({ queryKey: ["site-content"] });
+      // Refresh preview after save
+      setPreviewKey((k) => k + 1);
     },
     onError: (e: Error) => toast({ title: "Error", description: e.message, variant: "destructive" }),
   });
@@ -197,103 +214,174 @@ const AdminContent = () => {
     }
   };
 
+  const handleAccordionChange = useCallback((openSections: string[]) => {
+    if (openSections.length > 0) {
+      const lastOpened = openSections[openSections.length - 1];
+      const route = sectionPreviewRoute[lastOpened] ?? "/";
+      setPreviewRoute(route);
+    }
+  }, []);
+
+  // Build preview URL — use the current origin but navigate to public route
+  const previewSrc = `${window.location.origin}${previewRoute}`;
+
   if (isLoading) {
     return <div className="container py-12 text-muted-foreground">Loading…</div>;
   }
 
   return (
-    <div className="container max-w-3xl py-12">
-      <div className="mb-8 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Button asChild variant="ghost" size="sm">
-            <Link to="/admin"><ArrowLeft className="mr-2 h-4 w-4" /> Admin</Link>
-          </Button>
-          <div>
-            <h1 className="font-heading text-2xl text-foreground">Site Settings</h1>
-            <p className="text-sm text-muted-foreground">Manage all your site content in one place.</p>
+    <div className="flex h-[calc(100vh-4rem)] overflow-hidden">
+      {/* Editor panel */}
+      <div className={`flex flex-col overflow-hidden ${showPreview ? "w-1/2" : "w-full"} transition-all duration-300`}>
+        {/* Header */}
+        <div className="shrink-0 border-b border-border bg-background px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Button asChild variant="ghost" size="sm">
+                <Link to="/admin"><ArrowLeft className="mr-2 h-4 w-4" /> Admin</Link>
+              </Button>
+              <div>
+                <h1 className="font-heading text-xl text-foreground">Site Settings</h1>
+                <p className="text-xs text-muted-foreground">Edit content, then save to update the preview.</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline" size="sm"
+                onClick={() => setShowPreview(!showPreview)}
+                className="gap-2"
+              >
+                {showPreview ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                <span className="hidden sm:inline">{showPreview ? "Hide" : "Show"} Preview</span>
+              </Button>
+              <Button onClick={() => save.mutate()} disabled={save.isPending} size="sm">
+                <Save className="mr-2 h-4 w-4" />
+                {save.isPending ? "Saving…" : "Save"}
+              </Button>
+            </div>
           </div>
         </div>
-        <Button onClick={() => save.mutate()} disabled={save.isPending} size="lg">
-          <Save className="mr-2 h-4 w-4" />
-          {save.isPending ? "Saving…" : "Save"}
-        </Button>
-      </div>
 
-      <Accordion type="multiple" defaultValue={["profile", "homepage"]} className="space-y-3">
-        {sections.map((section) => (
-          <AccordionItem key={section.id} value={section.id} className="rounded-lg border border-border bg-card px-5">
-            <AccordionTrigger className="py-4 hover:no-underline">
-              <div className="text-left">
-                <div className="font-semibold text-foreground">{section.title}</div>
-                <div className="text-xs text-muted-foreground">{section.description}</div>
-              </div>
-            </AccordionTrigger>
-            <AccordionContent className="pb-5">
-              <div className="space-y-4">
-                {section.fields.map((field) => (
-                  <div key={field.key} className="space-y-1.5">
-                    <Label className="text-sm font-medium">{field.label}</Label>
-                    {field.help && <p className="text-xs text-muted-foreground">{field.help}</p>}
+        {/* Scrollable form */}
+        <div className="flex-1 overflow-y-auto px-6 py-6">
+          <Accordion
+            type="multiple"
+            defaultValue={["profile", "homepage"]}
+            onValueChange={handleAccordionChange}
+            className="space-y-3"
+          >
+            {sections.map((section) => (
+              <AccordionItem key={section.id} value={section.id} className="rounded-lg border border-border bg-card px-5">
+                <AccordionTrigger className="py-4 hover:no-underline">
+                  <div className="text-left">
+                    <div className="font-semibold text-foreground">{section.title}</div>
+                    <div className="text-xs text-muted-foreground">{section.description}</div>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="pb-5">
+                  <div className="space-y-4">
+                    {section.fields.map((field) => (
+                      <div key={field.key} className="space-y-1.5">
+                        <Label className="text-sm font-medium">{field.label}</Label>
+                        {field.help && <p className="text-xs text-muted-foreground">{field.help}</p>}
 
-                    {field.type === "file-pdf" ? (
-                      <div className="space-y-2">
-                        <div className="flex gap-2">
-                          <Input
-                            type="url"
+                        {field.type === "file-pdf" ? (
+                          <div className="space-y-2">
+                            <div className="flex gap-2">
+                              <Input
+                                type="url"
+                                value={values[field.key] ?? ""}
+                                onChange={(e) => updateField(field.key, e.target.value)}
+                                placeholder="PDF URL (or upload below)"
+                                className="flex-1"
+                              />
+                              <Button type="button" variant="outline" size="sm"
+                                onClick={() => fileRef.current?.click()} disabled={uploading}>
+                                <Upload className="mr-2 h-4 w-4" />
+                                {uploading ? "Uploading…" : "Upload"}
+                              </Button>
+                              <input ref={fileRef} type="file" accept="application/pdf"
+                                className="hidden" onChange={handleResumeUpload} />
+                            </div>
+                            {values[field.key] && (
+                              <div className="overflow-hidden rounded border border-border">
+                                <iframe src={values[field.key]} className="h-48 w-full" title="Resume preview" />
+                              </div>
+                            )}
+                          </div>
+                        ) : field.type === "resume-editor" ? (
+                          <ResumeEditor
+                            value={values[field.key]}
+                            onChange={(json) => updateField(field.key, json)}
+                          />
+                        ) : field.type === "textarea" ? (
+                          <Textarea
                             value={values[field.key] ?? ""}
                             onChange={(e) => updateField(field.key, e.target.value)}
-                            placeholder="PDF URL (or upload below)"
-                            className="flex-1"
+                            placeholder={field.placeholder}
+                            rows={field.key.includes("JSON") || field.key === "navLinks" || field.key === "identityHighlights" ? 5 : 3}
+                            className={field.key.includes("JSON") || field.key === "navLinks" || field.key === "identityHighlights" ? "font-mono text-xs" : ""}
                           />
-                          <Button type="button" variant="outline" size="sm"
-                            onClick={() => fileRef.current?.click()} disabled={uploading}>
-                            <Upload className="mr-2 h-4 w-4" />
-                            {uploading ? "Uploading…" : "Upload"}
-                          </Button>
-                          <input ref={fileRef} type="file" accept="application/pdf"
-                            className="hidden" onChange={handleResumeUpload} />
-                        </div>
-                        {values[field.key] && (
-                          <div className="overflow-hidden rounded border border-border">
-                            <iframe src={values[field.key]} className="h-48 w-full" title="Resume preview" />
-                          </div>
+                        ) : (
+                          <Input
+                            type={field.type === "url" ? "url" : "text"}
+                            value={values[field.key] ?? ""}
+                            onChange={(e) => updateField(field.key, e.target.value)}
+                            placeholder={field.placeholder}
+                          />
                         )}
                       </div>
-                    ) : field.type === "resume-editor" ? (
-                      <ResumeEditor
-                        value={values[field.key]}
-                        onChange={(json) => updateField(field.key, json)}
-                      />
-                    ) : field.type === "textarea" ? (
-                      <Textarea
-                        value={values[field.key] ?? ""}
-                        onChange={(e) => updateField(field.key, e.target.value)}
-                        placeholder={field.placeholder}
-                        rows={field.key.includes("JSON") || field.key === "navLinks" || field.key === "identityHighlights" ? 5 : 3}
-                        className={field.key.includes("JSON") || field.key === "navLinks" || field.key === "identityHighlights" ? "font-mono text-xs" : ""}
-                      />
-                    ) : (
-                      <Input
-                        type={field.type === "url" ? "url" : "text"}
-                        value={values[field.key] ?? ""}
-                        onChange={(e) => updateField(field.key, e.target.value)}
-                        placeholder={field.placeholder}
-                      />
-                    )}
+                    ))}
                   </div>
-                ))}
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
 
-      <div className="sticky bottom-4 mt-8 flex justify-end">
-        <Button onClick={() => save.mutate()} disabled={save.isPending} size="lg" className="shadow-lg">
-          <Save className="mr-2 h-4 w-4" />
-          {save.isPending ? "Saving…" : "Save All Changes"}
-        </Button>
+          <div className="sticky bottom-4 mt-8 flex justify-end">
+            <Button onClick={() => save.mutate()} disabled={save.isPending} size="lg" className="shadow-lg">
+              <Save className="mr-2 h-4 w-4" />
+              {save.isPending ? "Saving…" : "Save All Changes"}
+            </Button>
+          </div>
+        </div>
       </div>
+
+      {/* Preview panel */}
+      {showPreview && (
+        <div className="flex w-1/2 flex-col border-l border-border bg-muted/30">
+          {/* Preview header */}
+          <div className="flex shrink-0 items-center justify-between border-b border-border bg-background px-4 py-3">
+            <div className="flex items-center gap-2">
+              <div className="flex gap-1.5">
+                <div className="h-3 w-3 rounded-full bg-destructive/40" />
+                <div className="h-3 w-3 rounded-full bg-yellow-400/60" />
+                <div className="h-3 w-3 rounded-full bg-green-400/60" />
+              </div>
+              <span className="ml-2 rounded bg-muted px-3 py-1 font-mono text-xs text-muted-foreground">
+                {previewRoute}
+              </span>
+            </div>
+            <Button
+              variant="ghost" size="sm"
+              onClick={() => setPreviewKey((k) => k + 1)}
+              className="gap-1 text-xs"
+            >
+              <RefreshCw className="h-3 w-3" /> Refresh
+            </Button>
+          </div>
+
+          {/* iframe */}
+          <div className="flex-1 overflow-hidden">
+            <iframe
+              key={previewKey}
+              src={previewSrc}
+              className="h-full w-full border-0"
+              title="Live Preview"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
