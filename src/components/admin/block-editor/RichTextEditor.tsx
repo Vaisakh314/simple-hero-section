@@ -340,52 +340,17 @@ export default function RichTextEditor({ content, onChange, placeholder, classNa
     { icon: Minus, label: "Divider", onClick: () => { editor.chain().focus().setHorizontalRule().run(); setPlusMenuOpen(false); } },
   ];
 
-  // Close table context menu on click anywhere or scroll
-  useEffect(() => {
-    if (!tableCtx) return;
-    const close = () => setTableCtx(null);
-    window.addEventListener("click", close);
-    window.addEventListener("scroll", close, true);
-    return () => {
-      window.removeEventListener("click", close);
-      window.removeEventListener("scroll", close, true);
-    };
-  }, [tableCtx]);
-
-  // Right-click handler for table cells
-  const handleContextMenu = useCallback(
-    (e: React.MouseEvent) => {
-      if (!editor) return;
-      const target = e.target as HTMLElement;
-      const cell = target.closest("td, th");
-      if (!cell) {
-        setTableCtx(null);
-        return; // let browser default happen outside tables
-      }
-      e.preventDefault();
-      const containerRect = editorContainerRef.current?.getBoundingClientRect();
-      if (!containerRect) return;
-      setTableCtx({
-        x: e.clientX - containerRect.left,
-        y: e.clientY - containerRect.top,
-      });
-    },
-    [editor],
-  );
-
-  const tableCtxActions = editor
-    ? [
-        { label: "Insert row above", action: () => editor.chain().focus().addRowBefore().run() },
-        { label: "Insert row below", action: () => editor.chain().focus().addRowAfter().run() },
-        { label: "Delete row", action: () => editor.chain().focus().deleteRow().run(), destructive: true },
-        { type: "sep" as const },
-        { label: "Insert column left", action: () => editor.chain().focus().addColumnBefore().run() },
-        { label: "Insert column right", action: () => editor.chain().focus().addColumnAfter().run() },
-        { label: "Delete column", action: () => editor.chain().focus().deleteColumn().run(), destructive: true },
-        { type: "sep" as const },
-        { label: "Delete table", action: () => editor.chain().focus().deleteTable().run(), destructive: true },
-      ]
-    : [];
+  const tableCtxActions = [
+    { label: "Insert row above", action: () => editor.chain().focus().addRowBefore().run() },
+    { label: "Insert row below", action: () => editor.chain().focus().addRowAfter().run() },
+    { label: "Delete row", action: () => editor.chain().focus().deleteRow().run(), destructive: true },
+    { type: "sep" as const },
+    { label: "Insert column left", action: () => editor.chain().focus().addColumnBefore().run() },
+    { label: "Insert column right", action: () => editor.chain().focus().addColumnAfter().run() },
+    { label: "Delete column", action: () => editor.chain().focus().deleteColumn().run(), destructive: true },
+    { type: "sep" as const },
+    { label: "Delete table", action: () => editor.chain().focus().deleteTable().run(), destructive: true },
+  ];
 
   return (
     <div
