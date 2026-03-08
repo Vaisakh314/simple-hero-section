@@ -273,6 +273,10 @@ export default function RichTextEditor({ content, onChange, placeholder, classNa
 
       <Toggle size="sm" pressed={editor.isActive("link")} onPressedChange={setLink} className={btn(editor.isActive("link"))}><LinkIcon className="h-3.5 w-3.5" /></Toggle>
       <Toggle size="sm" pressed={false} onPressedChange={() => imageRef.current?.click()} className={btn(false)}><ImagePlus className="h-3.5 w-3.5" /></Toggle>
+
+      {sep}
+
+      <Toggle size="sm" pressed={editor.isActive("table")} onPressedChange={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()} className={btn(editor.isActive("table"))}><TableIcon className="h-3.5 w-3.5" /></Toggle>
     </>
   );
 
