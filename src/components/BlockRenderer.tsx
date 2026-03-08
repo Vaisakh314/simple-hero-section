@@ -12,11 +12,13 @@ const ALLOWED_TAGS = [
   "strong", "em", "u", "s", "a", "img",
   "figure", "figcaption", "div", "span",
   "video", "source",
+  "table", "thead", "tbody", "tfoot", "tr", "th", "td", "colgroup", "col",
 ];
 
 const ALLOWED_ATTR = [
   "href", "target", "rel", "src", "alt", "title", "class", "style", "width", "height",
   "controls", "preload", "type", "data-file-embed",
+  "colspan", "rowspan", "scope",
 ];
 
 function sanitize(html: string): string {

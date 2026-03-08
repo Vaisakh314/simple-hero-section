@@ -21,28 +21,42 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Get visitor IP from headers
+    // Get visitor IP — try multiple headers in priority order
     const ip =
-      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
       req.headers.get("cf-connecting-ip") ||
       req.headers.get("x-real-ip") ||
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
       "";
 
     // Geolocation lookup
     let country = "";
     let city = "";
-    if (ip && ip !== "127.0.0.1" && ip !== "::1") {
+
+    // Try Cloudflare headers first (instant, no API call)
+    const cfCountry = req.headers.get("cf-ipcountry");
+    if (cfCountry && cfCountry !== "XX" && cfCountry !== "T1") {
+      country = cfCountry;
+    }
+
+    // If no Cloudflare data and we have a real IP, use ip-api.com
+    if (!country && ip && ip !== "127.0.0.1" && ip !== "::1") {
       try {
         const geoRes = await fetch(`http://ip-api.com/json/${ip}?fields=country,city`);
         if (geoRes.ok) {
           const geo = await geoRes.json();
-          country = geo.country || "";
-          city = geo.city || "";
+          if (geo.status !== "fail") {
+            country = geo.country || "";
+            city = geo.city || "";
+          }
         }
       } catch {
         // Silently fail geo lookup
       }
     }
+
+    // Fallback: don't show misleading data
+    if (!country) country = "";
+    if (!city) city = "";
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,

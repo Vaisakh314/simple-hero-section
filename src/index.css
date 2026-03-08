@@ -390,6 +390,46 @@
     letter-spacing: 0.02em;
   }
 
+  /* Table styles for prose / rich text / editor */
+  .prose table, .rich-text table, .ProseMirror table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5em 0;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  .prose th, .rich-text th, .ProseMirror th {
+    background: hsl(var(--muted));
+    font-weight: 600;
+    text-align: left;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid hsl(var(--border));
+    color: hsl(var(--foreground));
+  }
+
+  .prose td, .rich-text td, .ProseMirror td {
+    padding: 0.625rem 0.75rem;
+    border: 1px solid hsl(var(--border));
+    color: hsl(var(--foreground) / 0.85);
+  }
+
+  .prose tr:nth-child(even), .rich-text tr:nth-child(even) {
+    background: hsl(var(--muted) / 0.35);
+  }
+
+  .ProseMirror .selectedCell {
+    background: hsl(var(--primary) / 0.12);
+  }
+
+  @media (max-width: 640px) {
+    .prose table, .rich-text table {
+      display: block;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+
   .eyebrow {
     font-family: var(--font-body);
     font-size: 0.875rem;

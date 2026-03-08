@@ -4,11 +4,16 @@ import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
+import { Table } from "@tiptap/extension-table";
+import { TableRow } from "@tiptap/extension-table-row";
+import { TableCell } from "@tiptap/extension-table-cell";
+import { TableHeader } from "@tiptap/extension-table-header";
 import { useRef, useState, useEffect, useCallback } from "react";
 import {
   Bold, Italic, Underline as UnderlineIcon, Strikethrough,
   Link as LinkIcon, List, ListOrdered, Quote, Minus, ImagePlus, Code,
   Heading1, Heading2, Heading3, Plus, Film, FileText, Image as GifIcon,
+  TableIcon,
 } from "lucide-react";
 import { Toggle } from "@/components/ui/toggle";
 import { cn } from "@/lib/utils";
@@ -48,6 +53,10 @@ export default function RichTextEditor({ content, onChange, placeholder, classNa
       Underline,
       Link.configure({ openOnClick: false }),
       Image.configure({ inline: false, allowBase64: true }),
+      Table.configure({ resizable: false }),
+      TableRow,
+      TableHeader,
+      TableCell,
       VideoNode,
       FileEmbedNode,
     ],
@@ -264,6 +273,10 @@ export default function RichTextEditor({ content, onChange, placeholder, classNa
 
       <Toggle size="sm" pressed={editor.isActive("link")} onPressedChange={setLink} className={btn(editor.isActive("link"))}><LinkIcon className="h-3.5 w-3.5" /></Toggle>
       <Toggle size="sm" pressed={false} onPressedChange={() => imageRef.current?.click()} className={btn(false)}><ImagePlus className="h-3.5 w-3.5" /></Toggle>
+
+      {sep}
+
+      <Toggle size="sm" pressed={editor.isActive("table")} onPressedChange={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()} className={btn(editor.isActive("table"))}><TableIcon className="h-3.5 w-3.5" /></Toggle>
     </>
   );
 
@@ -272,6 +285,7 @@ export default function RichTextEditor({ content, onChange, placeholder, classNa
     { icon: GifIcon, label: "GIF", onClick: () => gifRef.current?.click() },
     { icon: Film, label: "Video", onClick: () => videoRef.current?.click() },
     { icon: FileText, label: "PPT / PDF", onClick: () => fileRef.current?.click() },
+    { icon: TableIcon, label: "Table", onClick: () => { editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(); setPlusMenuOpen(false); } },
     { icon: Minus, label: "Divider", onClick: () => { editor.chain().focus().setHorizontalRule().run(); setPlusMenuOpen(false); } },
   ];
 
