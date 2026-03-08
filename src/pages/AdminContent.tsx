@@ -9,19 +9,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Save, Upload } from "lucide-react";
 import ResumeEditor from "@/components/admin/ResumeEditor";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Save, Upload } from "lucide-react";
 
 interface ContentField {
   key: string;
   label: string;
   help?: string;
-  type: "text" | "textarea" | "url" | "file-pdf";
+  type: "text" | "textarea" | "url" | "file-pdf" | "resume-editor";
 }
 
 const sections: { title: string; fields: ContentField[] }[] = [
