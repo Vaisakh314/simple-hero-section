@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 import { FileText, BookOpen, LogOut, Settings, Image as ImageIcon, BarChart3 } from "lucide-react";
 
 const AdminDashboard = () => {

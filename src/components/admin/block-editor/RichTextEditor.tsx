@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { Toggle } from "@/components/ui/toggle";
 import { cn } from "@/lib/utils";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { VideoNode } from "./extensions/VideoNode";
 import { FileEmbedNode } from "./extensions/FileEmbedNode";
