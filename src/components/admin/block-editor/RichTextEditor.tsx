@@ -13,7 +13,8 @@ import {
   Bold, Italic, Underline as UnderlineIcon, Strikethrough,
   Link as LinkIcon, List, ListOrdered, Quote, Minus, ImagePlus, Code,
   Heading1, Heading2, Heading3, Plus, Film, FileText, Image as GifIcon,
-  TableIcon,
+  TableIcon, Rows3, Columns3, Trash2, ArrowUpFromLine, ArrowDownFromLine,
+  ArrowLeftFromLine, ArrowRightFromLine,
 } from "lucide-react";
 import { Toggle } from "@/components/ui/toggle";
 import { cn } from "@/lib/utils";
